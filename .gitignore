@@ -1,0 +1,11 @@
+# 產出：由 GitHub Actions 自動建置，不進版本控制
+dist/
+
+# Python 暫存
+__pycache__/
+*.pyc
+
+# macOS / 編輯器
+.DS_Store
+.vscode/
+.idea/
