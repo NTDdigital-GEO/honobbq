@@ -151,8 +151,7 @@ def header(cur):
     return f'''<header class="top"><div class="wrap bar">
 <a class="brand" href="/"><img src="/assets/img/logo-white.png" width="480" height="249" alt="Hono Japanese BBQ"></a>
 <nav class="nav" aria-label="Main">{links}</nav>
-<div class="top-cta"><a class="btn btn-s small" data-track="order" data-place="header" href="{e(BIZ["order"])}">Order</a>
-<a class="btn btn-p small" data-track="reserve" data-place="header" href="{e(BIZ["reserve"])}">Reserve</a></div>
+<a class="btn btn-gold" data-track="reserve" data-place="header" href="{e(BIZ["reserve"])}">Reservations</a>
 </div></header>'''
 
 def crumbs(p):
@@ -161,16 +160,35 @@ def crumbs(p):
     return f'<nav class="crumb" aria-label="Breadcrumb">{items}</nav>'
 
 def hero(p):
+    """Fogo-style: the photo carries the place, address and quick links; the H1 sits on white below it."""
     if p.get("hero"):
         f = p["hero"]
-        sub = f'<p class="sub">{e(p["sub"])}</p>' if p.get("sub") else ""
-        kick = f'<p class="kicker">{e(p["kicker"])}</p>' if p.get("kicker") else ""
+        quick = "".join(f'<a class="btn btn-ghost" href="{h}">{e(t)}</a>' for h, t in
+                        [("/menu/", "Menu"), ("/drinks/", "Drinks"), ("/groups/", "Group Dining"), ("/visit/", "Visit")])
+        quick += f'<a class="btn btn-ghost" data-track="order" data-place="hero" href="{e(BIZ["order"])}">Order Now</a>'
         return f'''<section class="hero">{img_tag(f["img"], f["alt"], sizes="100vw", eager=True, cls="hero-img")}
-<div class="hero-in wrap">{crumbs(p)}{kick}<h1>{e(p["h1"])}</h1>{sub}
-<div class="cta-row"><a class="btn btn-p" data-track="reserve" data-place="hero" href="{e(BIZ["reserve"])}">Reserve a table</a>
-<a class="btn btn-s" data-track="order" data-place="hero" href="{e(BIZ["order"])}">Order online</a>
-<a class="btn btn-s" href="tel:{BIZ["tel_href"]}">Call {e(BIZ["tel_display"])}</a></div></div></section>'''
+<div class="hero-in wrap"><p class="place">{e(p.get("place", "North Dallas, Texas"))}</p>
+<p class="hero-addr">{e(BIZ["street"])}<br>{e(BIZ["city"])}, {e(BIZ["region"])} {e(BIZ["zip"])}</p>
+<p class="hero-tel"><a href="tel:{BIZ["tel_href"]}">{e(BIZ["tel_display"])}</a></p>
+<div class="quick">{quick}</div></div></section>'''
     return f'<section class="pagehead"><div class="wrap">{crumbs(p)}<h1>{e(p["h1"])}</h1></div></section>'
+
+def reserve_box():
+    """Fogo's cream 'Reserve a Table' panel directly under the hero (home page)."""
+    rows = "".join(f"<li><span>{e(l)}</span><b>{e(d)}</b></li>" for l, _, _, _, d in HOURS)
+    return f'''<section class="resbox-wrap"><div class="wrap"><div class="resbox">
+<div><h2>Reserve a Table</h2><p class="resplace">North Dallas, Texas · Preston &amp; Frankford</p>
+<ul class="reshours">{rows}</ul></div>
+<div class="resact"><a class="btn btn-p wide" data-track="reserve" data-place="resbox" href="{e(BIZ["reserve"])}">Book on Toast</a>
+<a class="btn btn-line wide" href="tel:{BIZ["tel_href"]}">Call {e(BIZ["tel_display"])}</a>
+<a class="btn btn-line wide" data-track="order" data-place="resbox" href="{e(BIZ["order"])}">Order Takeout</a></div>
+</div></div></section>'''
+
+def intro(p):
+    """H1 + answer block. On hero pages the H1 lives here, on white, like Fogo's location page."""
+    kick = f'<p class="label">{e(p["kicker"])}</p>' if p.get("kicker") else ""
+    h1 = f'{crumbs(p)}{kick}<h1>{e(p["h1"])}</h1>' if p.get("hero") else ""
+    return f'<section class="sec intro"><div class="wrap narrow">{h1}<p class="answer">{p["answer"]}</p></div></section>'
 
 def faq_list(pairs):
     return '<div class="faq">' + "".join(
@@ -204,8 +222,8 @@ def block(b):
     kind = b[0]
     if kind == "raw": return f'<div class="wrap">{b[1]}</div>'
     if kind.startswith("section"):
-        dark = " dark" if "dark" in kind else ""
-        return f'<section class="sec{dark}"><div class="wrap"><h2>{e(b[1])}</h2>{b[2]}</div></section>'
+        alt = " alt" if "alt" in kind else ""
+        return f'<section class="sec{alt}"><div class="wrap"><h2>{e(b[1])}</h2>{b[2]}</div></section>'
     if kind == "split":
         f = b[3]
         return (f'<section class="sec"><div class="wrap split"><div><h2>{e(b[1])}</h2>{b[2]}</div>'
@@ -241,10 +259,9 @@ def footer():
 <div><h3>Follow</h3><p class="flinks">{soc}</p></div></div>
 <div class="wrap legal">© 2026 {e(BIZ["name"])} · {e(BIZ["legal_name"])}</div></footer>
 <nav class="mbar" aria-label="Quick actions">
-<a href="tel:{BIZ["tel_href"]}">Call</a>
-<a data-track="directions" data-place="mbar" href="{e(BIZ["maps"])}">Directions</a>
-<a data-track="order" data-place="mbar" href="{e(BIZ["order"])}">Order</a>
-<a class="go" data-track="reserve" data-place="mbar" href="{e(BIZ["reserve"])}">Reserve</a></nav>'''
+<div class="mtxt"><b>Reserve a Table</b><span>North Dallas, Texas</span></div>
+<a class="mcall" href="tel:{BIZ["tel_href"]}">Call</a>
+<a class="mgo" data-track="reserve" data-place="mbar" href="{e(BIZ["reserve"])}">Book Now</a></nav>'''
 
 SCRIPT = r"""<script>
 (function(){window.dataLayer=window.dataLayer||[];
@@ -314,8 +331,7 @@ def render(p):
 <body>{gtm_body()}
 <a class="skip" href="#main">Skip to content</a>
 {header(url)}
-<main id="main">{hero(p)}
-<section class="sec answer-sec"><div class="wrap narrow"><p class="answer">{p["answer"]}</p></div></section>
+<main id="main">{hero(p)}{reserve_box() if p["slug"] == "" else ""}{intro(p)}
 {body}{related(p)}{cta_band(p)}</main>
 {footer()}
 <script type="application/ld+json">

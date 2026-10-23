@@ -131,7 +131,6 @@ HOME = dict(
     h1="All-You-Can-Eat Japanese BBQ in North Dallas",
     hero=figure("dining-room", "Booths with built-in tabletop grills in the dining room at Hono Japanese BBQ", eager=True),
     kicker="Gather around the flame",
-    sub="Wagyu on the grill, sushi from the kitchen, and a bar built for long nights.",
     answer=(f"Hono Japanese BBQ is an all-you-can-eat yakiniku restaurant in North Dallas at {BIZ['street']}, near "
             f"Preston &amp; Frankford. Grill wagyu at your table with dinner tiers at $49, $65 and $79 per person — Ruby "
             f"adds Japanese A5 wagyu — plus sushi and izakaya plates. AYCE lunch is ${LUNCH['price']}, Monday–Thursday, "
@@ -146,7 +145,7 @@ HOME = dict(
          f"for the grill, with sushi, ramen and kitchen favorites — ${LUNCH['price']} per person.</p><p>{e(LUNCH_DISCOUNT)}</p>"
          + btn("reserve", "Reserve lunch", place="home_lunch"),
          figure("lattice-window", "Lattice windows and bonsai along the dining room at Hono Japanese BBQ")),
-        ("section dark", "Happy Hour",
+        ("section alt", "Happy Hour",
          hh_block() + '<p>Ask for the Matcha-Tini ($14) — vodka, matcha, Frangelico, Licor 43 and cream. '
                       '<a href="/drinks/">See the full bar menu →</a></p>'),
         ("section", "Guest Favorites",
@@ -221,7 +220,7 @@ DRINKS = dict(
             "and signature cocktails like the $14 Matcha-Tini. Happy hour runs Monday–Friday 3–6 PM and every day from 9 PM to "
             "close, with $5 draft beer, frozen margaritas and well drinks."),
     blocks=[
-        ("section dark", "Happy Hour", hh_block()),
+        ("section alt", "Happy Hour", hh_block()),
         ("section", "Signature Cocktails", pricelist([(n, f"${p}", d) for n, p, d in COCKTAILS])),
         ("section", "Mocktails", pricelist([(n, f"${p}", d) for n, p, d in MOCKTAILS])),
         ("section", "Japanese Whisky", pricelist([(n, f"${p}", "") for n, p in WHISKY])),
@@ -249,6 +248,7 @@ GROUPS = dict(
     h1="Group Dining & Celebrations in North Dallas",
     crumbs=[("Groups", "/groups/")],
     hero=figure("dining-room", "Dining room of booths with tabletop grills at Hono Japanese BBQ", eager=True),
+    place="Group Dining · North Dallas", kicker="Birthdays, team dinners, family nights",
     answer=("Hono Japanese BBQ hosts birthdays, team dinners and family celebrations in North Dallas. Parties of six or more get "
             "110 minutes of all-you-can-eat Japanese BBQ, everyone at the table dines on one tier — $49, $65 or $79 per person — "
             "and gratuity is added for parties of five or more. Kids under 39 inches dine free."),
@@ -314,6 +314,7 @@ ABOUT = dict(
     h1="About Hono: Gathering Around the Flame",
     crumbs=[("About", "/about/")],
     hero=figure("lattice-window", "Lattice windows, bonsai and warm lighting inside Hono Japanese BBQ", eager=True),
+    place="Our Story", kicker="炎 means flame",
     answer=("Hono Japanese BBQ is a yakiniku and izakaya restaurant in North Dallas. Its name comes from 炎, the Japanese "
             "character for flame, and the idea that people everywhere gather around fire to cook, share stories and connect. "
             "Guests grill wagyu at their own table, with sushi, small plates and a full bar."),
