@@ -159,6 +159,15 @@ def crumbs(p):
     items = '<a href="/">Home</a>' + "".join(f' <span aria-hidden="true">/</span> <a href="{h}">{e(n)}</a>' for n, h in p["crumbs"])
     return f'<nav class="crumb" aria-label="Breadcrumb">{items}</nav>'
 
+def hero_h1(p):
+    """Render the H1 as unbreakable phrases so lines break only where intended
+    (e.g. "Japanese BBQ" and "in North Dallas" always stay together). The text is unchanged."""
+    lines = p.get("h1_lines")
+    if not lines: return e(p["h1"])
+    if " ".join(w for line in lines for w in line) != p["h1"]:
+        raise SystemExit(f"✗ h1_lines do not spell the H1 exactly: {p['h1']}")
+    return " ".join('<span class="h1l">' + " ".join(f'<span class="nb">{e(w)}</span>' for w in line) + "</span>" for line in lines)
+
 def hero(p):
     """Ad landing hero: proof, the H1 that echoes the ad, the offer, one primary CTA, then the address.
     Everything a paid visitor needs sits above the fold on a phone; Fogo's visual language is kept."""
@@ -172,7 +181,7 @@ def hero(p):
         proof = ('<p class="proof">' + ' <i>·</i> '.join(f"<span>{e(x)}</span>" for x in p["proof"].split(" · ")) + "</p>") if p.get("proof") else ""
         offer = ('<ul class="offer">' + "".join(f"<li>{e(o)}</li>" for o in p["offer"]) + "</ul>") if p.get("offer") else ""
         return f'''<section class="hero">{img_tag(f["img"], f["alt"], sizes="100vw", eager=True, cls="hero-img")}
-<div class="hero-in wrap">{proof}<h1>{e(p["h1"])}</h1>{offer}
+<div class="hero-in wrap">{proof}<h1>{hero_h1(p)}</h1>{offer}
 <div class="cta-row center">{primary}<a class="btn btn-ghost big" href="tel:{BIZ["tel_href"]}">Call {e(BIZ["tel_display"])}</a></div>
 <p class="hero-addr"><span>{e(BIZ["street"])}, {e(BIZ["city"])}</span> <i>·</i> <span>Open daily from noon</span></p></div></section>'''
     return f'<section class="pagehead"><div class="wrap">{crumbs(p)}<h1>{e(p["h1"])}</h1></div></section>'
