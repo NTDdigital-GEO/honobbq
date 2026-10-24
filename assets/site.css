@@ -166,8 +166,9 @@ footer a{color:#fff}
 
 /* ── tablet ── */
 @media (max-width:900px){
-  .nav{order:3;width:100%;margin:0;overflow-x:auto;gap:22px;padding-bottom:10px;scrollbar-width:none}
-  .nav::-webkit-scrollbar{display:none}
+  /* all six links stay visible on phones: no hidden horizontal scroll (it clipped "About" and hid "FAQ") */
+  .nav{order:3;width:100%;margin:0;justify-content:space-between;gap:8px;padding-bottom:10px}
+  .nav a{font-size:15px;letter-spacing:.08em}
   .bar{flex-wrap:wrap;gap:8px 16px;padding-top:10px;justify-content:space-between}
   .tiers,.cards3,.related,.stats{grid-template-columns:1fr}
   .cols4{grid-template-columns:1fr 1fr}.cols3{grid-template-columns:1fr}
@@ -203,6 +204,7 @@ footer a{color:#fff}
   .mgo{background:var(--red);color:#fff}
 }
 @media (max-width:400px){
+  .nav a{font-size:13.5px;letter-spacing:.05em}
   .hero-in{padding:22px 16px 22px}
   .hero h1{font-size:30px;margin-bottom:10px}
   .offer{font-size:17px;margin-bottom:14px}
