@@ -161,7 +161,9 @@ def crumbs(p):
 
 def hero_h1(p):
     """Render the H1 as unbreakable phrases so lines break only where intended
-    (e.g. "Japanese BBQ" and "in North Dallas" always stay together). The text is unchanged."""
+    (e.g. "Japanese BBQ" and "in North Dallas" always stay together). The text is unchanged.
+    In the photo hero each outer group is forced onto its own line; on plain page heads
+    groups stay inline and only wrap between phrases when the screen is too narrow."""
     lines = p.get("h1_lines")
     if not lines: return e(p["h1"])
     if " ".join(w for line in lines for w in line) != p["h1"]:
@@ -184,7 +186,7 @@ def hero(p):
 <div class="hero-in wrap">{proof}<h1>{hero_h1(p)}</h1>{offer}
 <div class="cta-row center">{primary}<a class="btn btn-ghost big" href="tel:{BIZ["tel_href"]}">Call {e(BIZ["tel_display"])}</a></div>
 <p class="hero-addr"><span>{e(BIZ["street"])}, {e(BIZ["city"])}</span> <i>·</i> <span>Open daily from noon</span></p></div></section>'''
-    return f'<section class="pagehead"><div class="wrap">{crumbs(p)}<h1>{e(p["h1"])}</h1></div></section>'
+    return f'<section class="pagehead"><div class="wrap">{crumbs(p)}<h1>{hero_h1(p)}</h1></div></section>'
 
 def reserve_box():
     """Fogo's cream 'Reserve a Table' panel directly under the hero (home page)."""

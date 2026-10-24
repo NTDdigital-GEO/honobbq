@@ -60,7 +60,7 @@ p{margin:0 0 1em}
 .btn.big{min-height:56px;padding:0 30px;font-size:18px}
 .proof span,.hero-addr span{white-space:nowrap}
 .hero h1 .h1l{display:block}
-.hero h1 .nb{white-space:nowrap}
+h1 .nb{white-space:nowrap}
 .proof i,.hero-addr i{font-style:normal;margin:0 10px;opacity:.8}
 .hero-addr{font-family:var(--sans);font-size:15px;color:#e5ddd3;margin:22px 0 0;padding-top:18px;border-top:1px solid rgba(197,176,123,.6);display:inline-block}
 
@@ -166,6 +166,7 @@ footer a{color:#fff}
 
 /* ── tablet ── */
 @media (max-width:900px){
+  .pagehead h1 .h1l{display:block}
   /* all six links stay visible on phones: no hidden horizontal scroll (it clipped "About" and hid "FAQ") */
   .nav{order:3;width:100%;margin:0;justify-content:space-between;gap:8px;padding-bottom:10px}
   .nav a{font-size:15px;letter-spacing:.08em}

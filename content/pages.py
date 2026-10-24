@@ -180,6 +180,8 @@ MENU = dict(
     title="AYCE Yakiniku Menu & Prices | Hono Japanese BBQ Dallas",
     desc='Gold $49, Platinum $65, Ruby $79 with Japanese A5 wagyu. $29 AYCE lunch Mon–Thu. Kids under 39" eat free. Full menu and dining rules.',
     h1="Yakiniku Menu & All-You-Can-Eat Prices",
+    # "All-You-Can-Eat Prices" is wider than a 320–375px screen, so it may split there (never overflow)
+    h1_lines=[["Yakiniku Menu &"], ["All-You-Can-Eat", "Prices"]],
     crumbs=[("Menu", "/menu/")],
     answer=("All-you-can-eat dinner at Hono Japanese BBQ is $49 (Gold), $65 (Platinum) or $79 (Ruby) per person, and each tier "
             "includes the tiers below it. Every tier comes with the full grill selection, kitchen specials and sushi. AYCE lunch is "
@@ -219,6 +221,7 @@ DRINKS = dict(
     title="Drinks & Happy Hour | Hono Japanese BBQ Dallas",
     desc="Japanese whisky, sake, signature cocktails and the Matcha-Tini. Happy hour Mon–Fri 3–6 PM and daily 9 PM–close with $5 drafts and margaritas.",
     h1="Japanese Whisky, Sake, Cocktails & Happy Hour",
+    h1_lines=[["Japanese Whisky,", "Sake, Cocktails"], ["& Happy Hour"]],
     crumbs=[("Drinks", "/drinks/")],
     answer=("The bar at Hono Japanese BBQ pours Japanese whisky from Suntory Toki to Yamazaki 18, sake from nigori to Dassai 45, "
             "and signature cocktails like the $14 Matcha-Tini. Happy hour runs Monday–Friday 3–6 PM and every day from 9 PM to "
@@ -285,6 +288,7 @@ VISIT = dict(
     title="Location, Hours & Parking | Hono Japanese BBQ Dallas",
     desc="18101 Preston Rd, Unit 302, Dallas, TX 75252 near Preston & Frankford. Open daily at noon, until midnight Fri–Sat. Call (214) 484-7707.",
     h1="Visit Hono: Location, Hours & Parking",
+    h1_lines=[["Visit Hono:"], ["Location,", "Hours & Parking"]],
     crumbs=[("Visit", "/visit/")],
     answer=(f"Hono Japanese BBQ is at {BIZ['street']}, {BIZ['city']}, {BIZ['region']} {BIZ['zip']}, near {BIZ['cross']} in "
             "North Dallas. It is open Sunday–Thursday 12 PM–11 PM and Friday–Saturday 12 PM–12 AM, with last seating 60 minutes "
@@ -351,6 +355,7 @@ FAQ = dict(
     title="AYCE FAQ: Prices, Kids, Time Limits | Hono Japanese BBQ",
     desc="Answers about Hono Japanese BBQ: AYCE tiers and prices, kids pricing, 90-minute dining time, gratuity, reservations, takeout and happy hour.",
     h1="All-You-Can-Eat FAQ",
+    h1_lines=[["All-You-Can-Eat", "FAQ"]],
     crumbs=[("FAQ", "/faq/")],
     answer=("Quick answers about Hono Japanese BBQ: dinner AYCE is $49, $65 or $79 per person and lunch is $29 Monday–Thursday. "
             "Kids under 39 inches dine free, dining time is 90 minutes (110 for parties of six or more), the whole table orders "
