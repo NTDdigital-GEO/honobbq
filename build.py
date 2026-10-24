@@ -41,6 +41,19 @@ def css_version():
 CSSV = css_version()
 IMG = json.load(open("assets/img/_meta.json"))
 
+def srcset_of(slug):
+    files = sorted((k for k in IMG if re.fullmatch(rf"{slug}-\d+\.jpg", k)), key=lambda k: IMG[k][0])
+    if not files: raise SystemExit(f"✗ no image files for {slug}")
+    return ", ".join(f"/assets/img/{f} {IMG[f][0]}w" for f in files)
+
+def picture(f, sizes, cls="", eager=False):
+    """<picture> with an optional portrait crop for phones (art direction) and the 'lift' brightening
+    used only for the dark interior photos — food photos are shot well-exposed and would blow out."""
+    cls = (cls + " lift").strip() if f.get("lift") else cls
+    img = img_tag(f["img"], f["alt"], sizes=sizes, eager=eager, cls=cls)
+    if not f.get("mobile"): return img
+    return f'<picture><source media="(max-width:760px)" srcset="{srcset_of(f["mobile"])}" sizes="100vw">{img}</picture>'
+
 def img_tag(slug, alt, sizes="(max-width:760px) 100vw, 50vw", eager=False, cls=""):
     """Responsive <img>. Landscape photos ship 800/1600, portrait 800/900."""
     files = sorted((k for k in IMG if re.fullmatch(rf"{slug}-\d+\.jpg", k)), key=lambda k: IMG[k][0])
@@ -71,7 +84,7 @@ def restaurant_node():
         "@type": "Restaurant", "@id": absu(RID), "name": BIZ["name"], "legalName": BIZ["legal_name"],
         "url": absu("/"), "telephone": BIZ["tel_schema"],
         "description": "All-you-can-eat Japanese BBQ (yakiniku) in North Dallas with wagyu, Japanese A5 wagyu, sushi, izakaya plates and a full bar.",
-        "image": [absu("/assets/img/dining-room-1600.jpg"), absu("/assets/img/storefront-900.jpg")],
+        "image": [absu("/assets/img/fire-wide-1600.jpg"), absu("/assets/img/table-1200.jpg"), absu("/assets/img/storefront-900.jpg")],
         "logo": absu("/assets/img/mark-512.png"),
         "servesCuisine": ["Japanese", "Yakiniku", "Japanese BBQ", "Sushi", "Izakaya"],
         "priceRange": "$$$",
@@ -182,7 +195,7 @@ def hero(p):
         # each phrase is its own unbreakable span, so "D Magazine" or "from noon" never split across lines
         proof = ('<p class="proof">' + ' <i>·</i> '.join(f"<span>{e(x)}</span>" for x in p["proof"].split(" · ")) + "</p>") if p.get("proof") else ""
         offer = ('<ul class="offer">' + "".join(f"<li>{e(o)}</li>" for o in p["offer"]) + "</ul>") if p.get("offer") else ""
-        return f'''<section class="hero">{img_tag(f["img"], f["alt"], sizes="100vw", eager=True, cls="hero-img")}
+        return f'''<section class="hero">{picture(f, sizes="100vw", cls="hero-img", eager=True)}
 <div class="hero-in wrap">{proof}<h1>{hero_h1(p)}</h1>{offer}
 <div class="cta-row center">{primary}<a class="btn btn-ghost big" href="tel:{BIZ["tel_href"]}">Call {e(BIZ["tel_display"])}</a></div>
 <p class="hero-addr"><span>{e(BIZ["street"])}, {e(BIZ["city"])}</span> <i>·</i> <span>Open daily from noon</span></p></div></section>'''
@@ -206,6 +219,18 @@ def intro(p):
         kick = f'<p class="label">{e(p["kicker"])}</p>' if p.get("kicker") else ""
         top = crumbs(p) + kick
     return f'<section class="sec intro"><div class="wrap narrow">{top}<p class="answer">{p["answer"]}</p></div></section>'
+
+def reels_html(title, items):
+    """Instagram reels as lightweight covers. The Instagram player loads only after a tap,
+    so the page stays fast (the old site's IG widget alone was most of its 16.5 MB)."""
+    cards = "".join(
+        f'<button type="button" class="reel" data-reel="{e(r["code"])}" aria-label="Play on Instagram: {e(r["title"])}">'
+        f'<img src="/assets/img/ig-{e(r["code"])}-480.jpg" width="480" height="853" alt="{e(r["alt"])}" loading="lazy" decoding="async">'
+        f'<span class="play" aria-hidden="true"></span><span class="cap">{e(r["title"])}</span></button>' for r in items)
+    return f'''<section class="sec reels-sec"><div class="wrap"><p class="label">Watch</p><h2>{e(title)}</h2>
+<div class="reels">{cards}</div>
+<p class="after center"><a class="btn btn-line" href="{e(BIZ["instagram"])}" rel="noopener">Follow on Instagram</a>
+<a class="btn btn-line" href="{e(BIZ["tiktok"])}" rel="noopener">Follow on TikTok</a></p></div></section>'''
 
 def faq_list(pairs):
     return '<div class="faq">' + "".join(
@@ -241,10 +266,11 @@ def block(b):
     if kind.startswith("section"):
         alt = " alt" if "alt" in kind else ""
         return f'<section class="sec{alt}"><div class="wrap"><h2>{e(b[1])}</h2>{b[2]}</div></section>'
-    if kind == "split":
-        f = b[3]
-        return (f'<section class="sec"><div class="wrap split"><div><h2>{e(b[1])}</h2>{b[2]}</div>'
-                f'<figure>{img_tag(f["img"], f["alt"])}</figure></div></section>')
+    if kind.startswith("split"):
+        f = b[3]; alt = " alt" if "alt" in kind else ""
+        return (f'<section class="sec{alt}"><div class="wrap split"><div><h2>{e(b[1])}</h2>{b[2]}</div>'
+                f'<figure>{picture(f, sizes="(max-width:900px) 100vw, 50vw")}</figure></div></section>')
+    if kind == "reels": return reels_html(b[1], b[2])
     if kind == "form": return form_html(b[1])
     if kind == "faq": return f'<section class="sec"><div class="wrap narrow"><h2>{e(b[1])}</h2>{faq_list(b[2])}</div></section>'
     if kind == "faqgroups":
@@ -316,6 +342,12 @@ if(f){var st=document.getElementById('formStatus'),b=f.querySelector('button[typ
    else{say('Something went wrong. Please call (214) 484-7707.','err');}})
   .catch(function(){say('Something went wrong. Please call (214) 484-7707.','err');})
   .finally(function(){b.disabled=false;b.textContent=o;});});}
+// Instagram reels: swap the cover for the Instagram player only when tapped.
+document.querySelectorAll('.reel[data-reel]').forEach(function(b){b.addEventListener('click',function(){
+ var c=b.getAttribute('data-reel'),f=document.createElement('iframe');
+ f.src='https://www.instagram.com/reel/'+c+'/embed/';f.title=b.getAttribute('aria-label');f.allow='autoplay; encrypted-media; picture-in-picture';
+ f.setAttribute('allowfullscreen','');f.loading='lazy';var w=document.createElement('div');w.className='reel playing';w.appendChild(f);b.replaceWith(w);
+ window.dataLayer.push({event:'reel_play',reel:c,page_path:location.pathname});});});
 // The mobile action bar is position:fixed; pad the page by its measured height so it never covers the footer.
 var mb=document.querySelector('.mbar');function fit(){document.body.style.paddingBottom=(mb&&getComputedStyle(mb).display!=='none')?mb.offsetHeight+'px':'';}
 fit();addEventListener('resize',fit);addEventListener('orientationchange',fit);

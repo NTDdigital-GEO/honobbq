@@ -103,7 +103,12 @@ fail("external render-blocking resources", sorted(ext)) if ext else ok("external
 # 8) images exist, are not double-prefixed, carry alt + width + height
 refs, noattr = set(), []
 for u, s in pages.items():
-    for tag in re.findall(r"<img [^>]+>", s):
+    for tag in re.findall(r"<(?:img|source) [^>]+>", s):
+        if tag.startswith("<source"):
+            for c in re.search(r'srcset="([^"]+)"', tag).group(1).split(","):
+                c = c.strip().split(" ")[0]
+                if "/assets/" in c: refs.add(c)
+            continue
         if not all(a in tag for a in ('alt="', 'width="', 'height="')): noattr.append(f"{u}: {tag[:80]}")
         for m in re.finditer(r'(?:src|srcset)="([^"]+)"', tag):
             for c in m.group(1).split(","):

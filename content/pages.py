@@ -8,7 +8,7 @@ group page follow Chama Gaúcha, and the voice follows Uchi Dallas.
 from html import escape as e
 from .facts import (BIZ, HOURS, LAST_SEATING, LAST_CALL, TIERS, ALL_TIERS_INCLUDE, LUNCH, LUNCH_DISCOUNT,
                     POLICIES, SAFETY, ALACARTE, A5_ALACARTE, HAPPY_HOUR, COCKTAILS, MOCKTAILS, WHISKY, SAKE,
-                    BEER, WINE, PROOF, PENDING, ok)
+                    BEER, WINE, PROOF, PENDING, REELS, ok)
 
 JMGA = "https://www.jmga.or.jp/standard/beef/"
 AWA = "https://wagyu.org/"
@@ -65,8 +65,12 @@ def trust_strip():
             f'<span>As featured in {ext(BIZ["dmag"], "D Magazine")}</span>'
             f'<span>Japanese A5 wagyu in our Ruby tier</span></div>')
 
-def figure(slug, alt, caption=None, eager=False):
-    return {"img": slug, "alt": alt, "caption": caption, "eager": eager}
+def figure(slug, alt, caption=None, eager=False, mobile=None, lift=False):
+    """mobile: a portrait image used below 760px (art direction). lift: brighten a dark interior photo."""
+    return {"img": slug, "alt": alt, "caption": caption, "eager": eager, "mobile": mobile, "lift": lift}
+
+def reels(tag=None):
+    return [r for r in REELS if tag is None or r["tag"] == tag]
 
 # ── FAQ (visible text and FAQPage schema are generated from the same tuples) ──
 def faq_general():
@@ -131,7 +135,7 @@ HOME = dict(
     h1="All-You-Can-Eat Japanese BBQ in North Dallas",
     # hero line breaks: each inner phrase never splits; each outer item starts a new line
     h1_lines=[["All-You-Can-Eat", "Japanese BBQ"], ["in North Dallas"]],
-    hero=figure("dining-room", "Booths with built-in tabletop grills in the dining room at Hono Japanese BBQ", eager=True),
+    hero=figure("fire-wide", "Wagyu flaring over the tabletop grill at Hono Japanese BBQ", eager=True, mobile="fire-tall"),
     kicker="Gather around the flame",
     proof=f'★ {PROOF["google_rating"]} on Google · {PROOF["google_reviews_floor"]} reviews · Featured in D Magazine',
     offer=[f'Wagyu AYCE from ${TIERS[0]["price"]}', f'${LUNCH["price"]} weekday lunch', "Happy hour daily 9 PM – close"],
@@ -148,21 +152,23 @@ HOME = dict(
          f"<p><b>{e(LUNCH['days'])}, {e(LUNCH['time'])}.</b> Wagyu beef belly, wagyu brisket, skirt steak, Duroc pork, chicken and seafood "
          f"for the grill, with sushi, ramen and kitchen favorites — ${LUNCH['price']} per person.</p><p>{e(LUNCH_DISCOUNT)}</p>"
          + btn("reserve", "Reserve lunch", place="home_lunch"),
-         figure("lattice-window", "Lattice windows and bonsai along the dining room at Hono Japanese BBQ")),
-        ("section alt", "Happy Hour",
+         figure("table", "A full table of wagyu, pork belly, shrimp, ramen and sides around the grill at Hono Japanese BBQ")),
+        ("split alt", "Happy Hour",
          hh_block() + '<p>Ask for the Matcha-Tini ($14) — vodka, matcha, Frangelico, Licor 43 and cream. '
-                      '<a href="/drinks/">See the full bar menu →</a></p>'),
+                      '<a href="/drinks/">See the full bar menu →</a></p>',
+         figure("cocktails", "A Matcha-Tini, a champagne-flute cocktail and an old fashioned on the bar at Hono Japanese BBQ")),
         ("section", "Guest Favorites",
          '<div class="cards3">'
          f'<article class="dish"><h3>Wagyu Beef Belly</h3><p>Thin, tender and quick on the grill. {e(pend("top_order"))}</p></article>'
          '<article class="dish"><h3>Wagyu Tartare</h3><p>Furikake-seasoned wagyu with crisp chips, one per guest on every dinner tier.</p></article>'
          '<article class="dish"><h3>Matcha-Tini</h3><p>The cocktail our Google reviewers keep mentioning: vodka, matcha, Frangelico, Licor 43 and cream.</p></article>'
          "</div>"),
+        ("reels", "Follow the Flame @hono.bbq", reels()),
         ("split", "Groups & Celebrations",
          "<p>Birthdays, team dinners and family nights are better around a grill. Parties of six or more get 110 minutes "
          "of AYCE dining, and every table has its own grill.</p>"
          '<p><a class="btn btn-p" href="/groups/">Plan a group dinner</a></p>',
-         figure("dining-room-tall", "Rows of booths with tabletop grills, ready for a group dinner")),
+         figure("dining-room-tall", "Rows of booths with tabletop grills, ready for a group dinner", lift=True)),
         ("section", "Takeout",
          "<p>Ramen, donburi, sushi and izakaya favorites are ready for pickup. All-you-can-eat is dine-in only.</p>"
          + btn("order", "Order online", place="home_takeout")),
@@ -227,8 +233,10 @@ DRINKS = dict(
             "and signature cocktails like the $14 Matcha-Tini. Happy hour runs Monday–Friday 3–6 PM and every day from 9 PM to "
             "close, with $5 draft beer, frozen margaritas and well drinks."),
     blocks=[
-        ("section alt", "Happy Hour", hh_block()),
+        ("split alt", "Happy Hour", hh_block(),
+         figure("cocktails", "A Matcha-Tini, a champagne-flute cocktail and an old fashioned on the bar at Hono Japanese BBQ")),
         ("section", "Signature Cocktails", pricelist([(n, f"${p}", d) for n, p, d in COCKTAILS])),
+        ("reels", "From the Bar on Instagram", reels("drinks")),
         ("section", "Mocktails", pricelist([(n, f"${p}", d) for n, p, d in MOCKTAILS])),
         ("section", "Japanese Whisky", pricelist([(n, f"${p}", "") for n, p in WHISKY])),
         ("section", "Sake", '<p class="fine">Glass / bottle</p>' + pricelist([(n, f"${p}", s) for n, s, p in SAKE])),
@@ -255,7 +263,7 @@ GROUPS = dict(
     h1="Group Dining & Celebrations in North Dallas",
     h1_lines=[["Group Dining", "& Celebrations"], ["in North Dallas"]],
     crumbs=[("Groups", "/groups/")],
-    hero=figure("dining-room", "Dining room of booths with tabletop grills at Hono Japanese BBQ", eager=True),
+    hero=figure("dining-room", "Dining room of booths with tabletop grills at Hono Japanese BBQ", eager=True, lift=True),
     kicker="Birthdays, team dinners, family nights", cta="plan",
     proof="Parties of 6+ get 110 minutes",
     offer=[f'Tiers from ${TIERS[0]["price"]} per person', 'Kids under 39" dine free', "Full bar · open until midnight Fri & Sat"],
@@ -298,7 +306,7 @@ VISIT = dict(
          f'<p class="addr">{e(BIZ["name"])}<br>{e(BIZ["street"])}<br>{e(BIZ["city"])}, {e(BIZ["region"])} {e(BIZ["zip"])}</p>'
          f'<p>Near the intersection of {e(BIZ["cross"])} in {e(BIZ["area"])}. Look for the red 炎 sign.</p>'
          f'<p><a href="tel:{BIZ["tel_href"]}">{e(BIZ["tel_display"])}</a></p><div class="cta-row">{btn("map", "Get directions", place="visit")}</div>',
-         figure("storefront", "Storefront of Hono Japanese BBQ with the red 炎 sign above the door")),
+         figure("storefront", "Storefront of Hono Japanese BBQ with the red 炎 sign above the door", lift=True)),
         ("section", "Hours", hours_table()),
         ("section", "Parking & Accessibility",
          (f"<p>{e(pend('parking'))}</p>" if pend("parking") else "")
@@ -312,7 +320,7 @@ VISIT = dict(
                          "Takeout for à la carte dishes through Toast",
                          'Kids under 39" dine AYCE free',
                          pend("patio"), pend("wifi")] if x]),
-         figure("flame-sign", "The illuminated red 炎 flame sign on the building at Hono Japanese BBQ")),
+         figure("flame-sign", "The illuminated red 炎 flame sign on the building at Hono Japanese BBQ", lift=True)),
     ],
     related=[("/menu/", "Menu & prices", "AYCE tiers and lunch"), ("/groups/", "Group dining", "Parties of 6+"),
              ("/faq/", "FAQ", "Time limits, kids, takeout")],
@@ -325,7 +333,7 @@ ABOUT = dict(
     h1="About Hono: Gathering Around the Flame",
     h1_lines=[["About Hono:"], ["Gathering Around", "the Flame"]],
     crumbs=[("About", "/about/")],
-    hero=figure("lattice-window", "Lattice windows, bonsai and warm lighting inside Hono Japanese BBQ", eager=True),
+    hero=figure("lattice-window", "Lattice windows, bonsai and warm lighting inside Hono Japanese BBQ", eager=True, lift=True),
     kicker="炎 means flame",
     proof=f'★ {PROOF["google_rating"]} on Google · {PROOF["google_reviews_floor"]} reviews · Featured in D Magazine',
     offer=["Wagyu yakiniku at your table", "Sushi & izakaya plates", "Full bar & happy hour"],
@@ -344,7 +352,7 @@ ABOUT = dict(
          f'{PROOF["google_rating"]} stars across {PROOF["google_reviews_floor"]} reviews, and the things they mention most are the '
          "all-you-can-eat, the sushi, the salad bar and the matcha martini.</p>"
          + btn("reserve", "Reserve a table", place="about"),
-         figure("flame-sign", "The red 炎 flame sign on the Hono Japanese BBQ building")),
+         figure("flame-sign", "The red 炎 flame sign on the Hono Japanese BBQ building", lift=True)),
     ],
     related=[("/menu/", "Menu & prices", "Three AYCE tiers"), ("/visit/", "Visit", "Find the red 炎 sign"),
              ("/groups/", "Group dining", "Celebrate with us")],

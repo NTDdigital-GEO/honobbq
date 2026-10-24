@@ -1,4 +1,12 @@
 {
+ "cocktails-1200.jpg": [
+  1200,
+  2133
+ ],
+ "cocktails-800.jpg": [
+  800,
+  1422
+ ],
  "dining-room-1600.jpg": [
   1600,
   1066
@@ -14,6 +22,22 @@
  "dining-room-tall-900.jpg": [
   900,
   1600
+ ],
+ "fire-tall-1200.jpg": [
+  1200,
+  2133
+ ],
+ "fire-tall-800.jpg": [
+  800,
+  1422
+ ],
+ "fire-wide-1600.jpg": [
+  1600,
+  900
+ ],
+ "fire-wide-800.jpg": [
+  800,
+  450
  ],
  "flame-sign-800.jpg": [
   800,
@@ -31,14 +55,6 @@
   800,
   533
  ],
- "logo-white.png": [
-  480,
-  249
- ],
- "mark-512.png": [
-  512,
-  512
- ],
  "storefront-800.jpg": [
   800,
   1422
@@ -46,5 +62,21 @@
  "storefront-900.jpg": [
   900,
   1600
+ ],
+ "table-1200.jpg": [
+  1200,
+  2133
+ ],
+ "table-800.jpg": [
+  800,
+  1422
+ ],
+ "logo-white.png": [
+  480,
+  249
+ ],
+ "mark-512.png": [
+  512,
+  512
  ]
 }

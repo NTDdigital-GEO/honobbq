@@ -129,6 +129,18 @@ WINE = [("Bollicini Prosecco", "10 / 34"), ("Placido Pinot Grigio", "11 / 35"), 
         ("Coppola Pinot Noir", "14 / 46"), ("Director's Cut Cabernet", "16 / 58"),
         ("Aska Bolgheri Rosso", "24 / 89"), ("Laurent-Perrier Champagne (bottle)", "121")]
 
+# ── Instagram reels (@hono.bbq, captions are the restaurant's own; covers saved locally 2026-10-24) ──
+# Titles are shortened from each reel's first caption line. Covers live in assets/img/ig-<code>-480.jpg
+# because Instagram image URLs expire. Videos load only when a guest taps play (no IG widget weight).
+REELS = [
+    dict(code="DdICkYmgBBy", title="A night out at Hono", alt="Two guests toast with cocktails over wagyu on the grill", tag="night"),
+    dict(code="Dd7FSw8udaR", title="Our fan-favorite Matcha-Tini", alt="A bartender holds up a frothy green Matcha-Tini", tag="drinks"),
+    dict(code="DcWnvyMtdIZ", title="Drinks. Vibe. Food.", alt="Drinks, food and the dining room at Hono", tag="drinks"),
+    dict(code="DeQBhzrxsaH", title="Wagyu + cocktails", alt="Unlimited wagyu paired with Japanese-inspired cocktails", tag="drinks"),
+    dict(code="DdUsXuzBHoW", title="A fun night out with friends", alt="Friends gather around the grill at Hono", tag="night"),
+    dict(code="DesSfEsS3Tu", title="Send this to your grill partner", alt="Japanese BBQ cooking at the table", tag="night"),
+]
+
 # ── Social proof (Google Business Profile, 2026-10-23) ──
 PROOF = dict(google_rating="4.8", google_reviews_floor="600+",   # 604 on 2026-10-23; update when it passes 700
              review_topics=["all-you-can-eat", "sushi", "matcha martini", "salad bar", "wagyu tartare"])
