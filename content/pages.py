@@ -131,6 +131,8 @@ HOME = dict(
     h1="All-You-Can-Eat Japanese BBQ in North Dallas",
     hero=figure("dining-room", "Booths with built-in tabletop grills in the dining room at Hono Japanese BBQ", eager=True),
     kicker="Gather around the flame",
+    proof=f'★ {PROOF["google_rating"]} on Google · {PROOF["google_reviews_floor"]} reviews · Featured in D Magazine',
+    offer=[f'Wagyu AYCE from ${TIERS[0]["price"]}', f'${LUNCH["price"]} weekday lunch', "Happy hour daily 9 PM – close"],
     answer=(f"Hono Japanese BBQ is an all-you-can-eat yakiniku restaurant in North Dallas at {BIZ['street']}, near "
             f"Preston &amp; Frankford. Grill wagyu at your table with dinner tiers at $49, $65 and $79 per person — Ruby "
             f"adds Japanese A5 wagyu — plus sushi and izakaya plates. AYCE lunch is ${LUNCH['price']}, Monday–Thursday, "
@@ -248,7 +250,9 @@ GROUPS = dict(
     h1="Group Dining & Celebrations in North Dallas",
     crumbs=[("Groups", "/groups/")],
     hero=figure("dining-room", "Dining room of booths with tabletop grills at Hono Japanese BBQ", eager=True),
-    place="Group Dining · North Dallas", kicker="Birthdays, team dinners, family nights",
+    kicker="Birthdays, team dinners, family nights", cta="plan",
+    proof="Parties of 6+ get 110 minutes",
+    offer=[f'Tiers from ${TIERS[0]["price"]} per person', 'Kids under 39" dine free', "Full bar · open until midnight Fri & Sat"],
     answer=("Hono Japanese BBQ hosts birthdays, team dinners and family celebrations in North Dallas. Parties of six or more get "
             "110 minutes of all-you-can-eat Japanese BBQ, everyone at the table dines on one tier — $49, $65 or $79 per person — "
             "and gratuity is added for parties of five or more. Kids under 39 inches dine free."),
@@ -314,7 +318,9 @@ ABOUT = dict(
     h1="About Hono: Gathering Around the Flame",
     crumbs=[("About", "/about/")],
     hero=figure("lattice-window", "Lattice windows, bonsai and warm lighting inside Hono Japanese BBQ", eager=True),
-    place="Our Story", kicker="炎 means flame",
+    kicker="炎 means flame",
+    proof=f'★ {PROOF["google_rating"]} on Google · {PROOF["google_reviews_floor"]} reviews · Featured in D Magazine',
+    offer=["Wagyu yakiniku at your table", "Sushi & izakaya plates", "Full bar & happy hour"],
     answer=("Hono Japanese BBQ is a yakiniku and izakaya restaurant in North Dallas. Its name comes from 炎, the Japanese "
             "character for flame, and the idea that people everywhere gather around fire to cook, share stories and connect. "
             "Guests grill wagyu at their own table, with sushi, small plates and a full bar."),

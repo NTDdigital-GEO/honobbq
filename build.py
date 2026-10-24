@@ -160,17 +160,21 @@ def crumbs(p):
     return f'<nav class="crumb" aria-label="Breadcrumb">{items}</nav>'
 
 def hero(p):
-    """Fogo-style: the photo carries the place, address and quick links; the H1 sits on white below it."""
+    """Ad landing hero: proof, the H1 that echoes the ad, the offer, one primary CTA, then the address.
+    Everything a paid visitor needs sits above the fold on a phone; Fogo's visual language is kept."""
     if p.get("hero"):
         f = p["hero"]
-        quick = "".join(f'<a class="btn btn-ghost" href="{h}">{e(t)}</a>' for h, t in
-                        [("/menu/", "Menu"), ("/drinks/", "Drinks"), ("/groups/", "Group Dining"), ("/visit/", "Visit")])
-        quick += f'<a class="btn btn-ghost" data-track="order" data-place="hero" href="{e(BIZ["order"])}">Order Now</a>'
+        if p.get("cta") == "plan":
+            primary = '<a class="btn btn-p big" href="#plan">Plan a Group Dinner</a>'
+        else:
+            primary = f'<a class="btn btn-p big" data-track="reserve" data-place="hero" href="{e(BIZ["reserve"])}">Reserve a Table</a>'
+        # each phrase is its own unbreakable span, so "D Magazine" or "from noon" never split across lines
+        proof = ('<p class="proof">' + ' <i>·</i> '.join(f"<span>{e(x)}</span>" for x in p["proof"].split(" · ")) + "</p>") if p.get("proof") else ""
+        offer = ('<ul class="offer">' + "".join(f"<li>{e(o)}</li>" for o in p["offer"]) + "</ul>") if p.get("offer") else ""
         return f'''<section class="hero">{img_tag(f["img"], f["alt"], sizes="100vw", eager=True, cls="hero-img")}
-<div class="hero-in wrap"><p class="place">{e(p.get("place", "North Dallas, Texas"))}</p>
-<p class="hero-addr">{e(BIZ["street"])}<br>{e(BIZ["city"])}, {e(BIZ["region"])} {e(BIZ["zip"])}</p>
-<p class="hero-tel"><a href="tel:{BIZ["tel_href"]}">{e(BIZ["tel_display"])}</a></p>
-<div class="quick">{quick}</div></div></section>'''
+<div class="hero-in wrap">{proof}<h1>{e(p["h1"])}</h1>{offer}
+<div class="cta-row center">{primary}<a class="btn btn-ghost big" href="tel:{BIZ["tel_href"]}">Call {e(BIZ["tel_display"])}</a></div>
+<p class="hero-addr"><span>{e(BIZ["street"])}, {e(BIZ["city"])}</span> <i>·</i> <span>Open daily from noon</span></p></div></section>'''
     return f'<section class="pagehead"><div class="wrap">{crumbs(p)}<h1>{e(p["h1"])}</h1></div></section>'
 
 def reserve_box():
@@ -185,10 +189,12 @@ def reserve_box():
 </div></div></section>'''
 
 def intro(p):
-    """H1 + answer block. On hero pages the H1 lives here, on white, like Fogo's location page."""
-    kick = f'<p class="label">{e(p["kicker"])}</p>' if p.get("kicker") else ""
-    h1 = f'{crumbs(p)}{kick}<h1>{e(p["h1"])}</h1>' if p.get("hero") else ""
-    return f'<section class="sec intro"><div class="wrap narrow">{h1}<p class="answer">{p["answer"]}</p></div></section>'
+    """Answer block on white. Hero pages get their breadcrumb and brand line here (the H1 is in the hero)."""
+    top = ""
+    if p.get("hero"):
+        kick = f'<p class="label">{e(p["kicker"])}</p>' if p.get("kicker") else ""
+        top = crumbs(p) + kick
+    return f'<section class="sec intro"><div class="wrap narrow">{top}<p class="answer">{p["answer"]}</p></div></section>'
 
 def faq_list(pairs):
     return '<div class="faq">' + "".join(
